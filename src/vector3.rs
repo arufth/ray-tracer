@@ -15,6 +15,14 @@ impl Vector3 {
         Vector3 { x, y, z }
     }
 
+    pub fn new_from(vector: &Vector3) -> Self {
+        Vector3 {
+            x: vector.x,
+            y: vector.y,
+            z: vector.z,
+        }
+    }
+
     pub fn zero() -> Self {
         Self::new(0.0, 0.0, 0.0)
     }
@@ -40,7 +48,7 @@ impl Vector3 {
     }
 
     pub fn unit_vector(vector: &Vector3) -> Self {
-      vector / vector.length()
+        vector / vector.length()
     }
 }
 
@@ -97,7 +105,7 @@ impl Mul<&Vector3> for &Vector3 {
     type Output = Vector3;
 
     fn mul(self, rhs: &Vector3) -> Self::Output {
-        Vector3::new(self.x - rhs.x, self.y - rhs.y, self.z * rhs.z)
+        Vector3::new(self.x * rhs.x, self.y * rhs.y, self.z * rhs.z)
     }
 }
 
