@@ -44,7 +44,7 @@ fn main() -> std::io::Result<()> {
     let image_width = 400;
 
     // Calculate the image height, and ensure that it's at least 1.
-    let image_height = image_width as i32 / aspect_ratio as i32;
+    let image_height = (image_width as f64 / aspect_ratio) as i32;
     let image_height = if image_height < 1 { 1 } else { image_height };
 
     // Camera
