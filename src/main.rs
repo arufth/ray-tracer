@@ -8,6 +8,10 @@ use vector3::{Point3, Vector3};
 mod color;
 mod ray;
 mod vector3;
+mod hittable;
+mod sphere;
+mod hittable_list;
+mod utils;
 
 fn hit_sphere(center: &Point3, radius: f64, ray: &Ray) -> f64 {
     let oc = center - ray.origin();

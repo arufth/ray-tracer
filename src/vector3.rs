@@ -1,7 +1,8 @@
 use std::fmt;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
+
 pub struct Vector3 {
     pub x: f64,
     pub y: f64,
