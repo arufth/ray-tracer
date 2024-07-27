@@ -3,6 +3,7 @@ use std::io::{BufWriter, Write};
 
 use color::Color;
 use hittable::hittable::{HitRecord, Hittable};
+use interval::Interval;
 use ray::Ray;
 use sphere::Sphere;
 use vector3::{Point3, Vector3};
@@ -14,27 +15,12 @@ mod hittable;
 mod sphere;
 mod hittable_list;
 mod utils;
-
-// fn hit_sphere(center: &Point3, radius: f64, ray: &Ray) -> f64 {
-//     let oc = center - ray.origin();
-
-//     let a = ray.direction().length_squared();
-//     let h = Vector3::dot(&ray.direction(), &oc);
-//     let c = oc.length_squared() - radius * radius;
-
-//     let discriminant = h * h - a * c;
-
-//     if discriminant < 0.0 {
-//         return -1.0
-//     }
-
-//     (h - discriminant.sqrt()) / a
-// }
+mod interval;
 
 fn ray_color<T: Hittable>(ray: &Ray, world: &T) -> Color {
     let mut rec = HitRecord::zero();
     
-    if world.hit(ray, 0.0, utils::utils::INFINITY, &mut rec) {
+    if world.hit(ray, Interval::new(0.0, utils::utils::INFINITY), &mut rec) {
         return 0.5 * &(&rec.normal + &Color::new(1.0, 1.0, 1.0))
     }
 
