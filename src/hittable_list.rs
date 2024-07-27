@@ -1,7 +1,5 @@
-use std::clone;
 
 use crate::hittable::hittable::{HitRecord, Hittable};
-
 
 pub struct HittableList {
   pub objects: Vec<Box<dyn Hittable>>

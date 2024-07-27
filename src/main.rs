@@ -2,7 +2,9 @@ use std::fs::File;
 use std::io::{BufWriter, Write};
 
 use color::Color;
+use hittable::hittable::{HitRecord, Hittable};
 use ray::Ray;
+use sphere::Sphere;
 use vector3::{Point3, Vector3};
 
 mod color;
@@ -13,27 +15,27 @@ mod sphere;
 mod hittable_list;
 mod utils;
 
-fn hit_sphere(center: &Point3, radius: f64, ray: &Ray) -> f64 {
-    let oc = center - ray.origin();
+// fn hit_sphere(center: &Point3, radius: f64, ray: &Ray) -> f64 {
+//     let oc = center - ray.origin();
 
-    let a = ray.direction().length_squared();
-    let h = Vector3::dot(&ray.direction(), &oc);
-    let c = oc.length_squared() - radius * radius;
+//     let a = ray.direction().length_squared();
+//     let h = Vector3::dot(&ray.direction(), &oc);
+//     let c = oc.length_squared() - radius * radius;
 
-    let discriminant = h * h - a * c;
+//     let discriminant = h * h - a * c;
 
-    if discriminant < 0.0 {
-        return -1.0
-    }
+//     if discriminant < 0.0 {
+//         return -1.0
+//     }
 
-    (h - discriminant.sqrt()) / a
-}
+//     (h - discriminant.sqrt()) / a
+// }
 
-fn ray_color(ray: &Ray) -> Color {
-    let t = hit_sphere(&Point3::new(0.0, 0.0, -1.0), 0.5, ray);
-    if t > 0.0 {
-        let n = Vector3::unit_vector(&(&ray.at(t) - &Vector3::new(0.0, 0.0, -1.0)));
-        return 0.5 * &Color::new(n.x + 1.0, n.y + 1.0, n.z + 1.0)
+fn ray_color<T: Hittable>(ray: &Ray, world: &T) -> Color {
+    let mut rec = HitRecord::zero();
+    
+    if world.hit(ray, 0.0, utils::utils::INFINITY, &mut rec) {
+        return 0.5 * &(&rec.normal + &Color::new(1.0, 1.0, 1.0))
     }
 
     let unit_direction = Vector3::unit_vector(ray.direction());
@@ -50,6 +52,12 @@ fn main() -> std::io::Result<()> {
     // Calculate the image height, and ensure that it's at least 1.
     let image_height = (image_width as f64 / aspect_ratio) as i32;
     let image_height = if image_height < 1 { 1 } else { image_height };
+
+    // World
+
+    let mut world = hittable_list::HittableList::zero();
+    world.add(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));
+    world.add(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
 
     // Camera
     let focal_length = 1.0;
@@ -84,7 +92,7 @@ fn main() -> std::io::Result<()> {
             let ray_direction = &pixel_center - &camera_center;
             let ray = Ray::new(&camera_center, &ray_direction);
 
-            let pixel_color = ray_color(&ray);
+            let pixel_color = ray_color(&ray, &world);
 
             Color::write_color(&mut writer, &pixel_color)?;
         }
