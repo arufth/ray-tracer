@@ -1,5 +1,4 @@
 
-
 use camera::Camera;
 
 use sphere::Sphere;
