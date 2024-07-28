@@ -26,4 +26,12 @@ impl Interval {
     pub fn surronds(&self, x: f64) -> bool {
         self.min < x && x < self.max
     }
+
+    pub fn clamp(&self, x: f64) -> f64 {
+        match x {
+            x if x < self.min => self.min,
+            x if x > self.max => self.max,
+            _ => x,
+        }
+    }
 }
