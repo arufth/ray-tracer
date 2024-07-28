@@ -1,4 +1,4 @@
-use {camera::Camera, sphere::Sphere, vector3::Point3};
+use {camera::Camera, hittable_list::HittableList, sphere::Sphere, vector3::Point3};
 
 mod camera;
 mod color;
@@ -12,7 +12,7 @@ mod vector3;
 
 fn main() -> std::io::Result<()> {
     // World
-    let mut world = hittable_list::HittableList::zero();
+    let mut world = HittableList::zero();
 
     world.add(Sphere::new(Point3::new(0.0, 0.0, -1.0), 0.5));
     world.add(Sphere::new(Point3::new(0.0, -100.5, -1.0), 100.0));
