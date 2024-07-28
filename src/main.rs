@@ -1,21 +1,16 @@
+use {camera::Camera, sphere::Sphere, vector3::Point3};
 
-use camera::Camera;
-
-use sphere::Sphere;
-use vector3::Point3;
-
-mod color;
-mod ray;
-mod vector3;
-mod hittable;
-mod sphere;
-mod hittable_list;
-mod utils;
-mod interval;
 mod camera;
+mod color;
+mod hittable;
+mod hittable_list;
+mod interval;
+mod ray;
+mod sphere;
+mod utils;
+mod vector3;
 
 fn main() -> std::io::Result<()> {
-
     // World
     let mut world = hittable_list::HittableList::zero();
 

@@ -1,7 +1,6 @@
-use std::fmt;
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Copy, Clone )]
 
 pub struct Vector3 {
     pub x: f64,
@@ -14,14 +13,6 @@ pub type Point3 = Vector3;
 impl Vector3 {
     pub fn new(x: f64, y: f64, z: f64) -> Self {
         Vector3 { x, y, z }
-    }
-
-    pub fn new_from(vector: &Vector3) -> Self {
-        Vector3 {
-            x: vector.x,
-            y: vector.y,
-            z: vector.z,
-        }
     }
 
     pub fn zero() -> Self {
@@ -97,7 +88,6 @@ impl Mul<&Vector3> for f64 {
     type Output = Vector3;
 
     fn mul(self, rhs: &Vector3) -> Self::Output {
-        // Vector3::new(self * rhs.x, self * rhs.y, self * rhs.z)
         rhs * self
     }
 }
@@ -129,11 +119,5 @@ impl Div<f64> for &Vector3 {
 impl DivAssign<f64> for Vector3 {
     fn div_assign(&mut self, rhs: f64) {
         *self *= 1.0 / rhs;
-    }
-}
-
-impl fmt::Display for Vector3 {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "[{}, {}, {}]", self.x, self.y, self.z)
     }
 }

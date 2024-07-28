@@ -1,12 +1,13 @@
-use std::fs::File;
-use std::io::{BufWriter, Write};
+use std::{
+    fs::File,
+    io::{BufWriter, Write},
+};
 
 use crate::{
     color::Color,
-    hittable::hittable::{HitRecord, Hittable},
+    hittable::{HitRecord, Hittable},
     interval::Interval,
     ray::Ray,
-    utils,
     vector3::{Point3, Vector3},
 };
 
@@ -36,11 +37,7 @@ impl Camera {
 
     fn initialize(&mut self) {
         self.image_height = (self.image_width as f64 / self.aspect_ratio) as i32;
-        self.image_height = if self.image_height < 1 {
-            1
-        } else {
-            self.image_height
-        };
+        self.image_height = self.image_height.max(1);
 
         self.center = Point3::new(0.0, 0.0, 0.0);
 
@@ -61,6 +58,7 @@ impl Camera {
         let viewport_upper_left = &(&(&self.center - &Vector3::new(0.0, 0.0, focal_length))
             - &(&viewport_u / 2.0))
             - &(&viewport_v / 2.0);
+
         self.pixel00_loc =
             &viewport_upper_left + &(0.5 * &(&self.pixel_delta_u + &self.pixel_delta_v));
     }
@@ -99,12 +97,13 @@ impl Camera {
     fn ray_color<T: Hittable>(ray: &Ray, world: &T) -> Color {
         let mut rec = HitRecord::zero();
 
-        if world.hit(ray, Interval::new(0.0, utils::INFINITY), &mut rec) {
-            return 0.5 * &(&rec.normal + &Color::new(1.0, 1.0, 1.0));
+        match world.hit(ray, Interval::new(0.0, f64::INFINITY), &mut rec) {
+            true => 0.5 * &(&rec.normal + &Color::new(1.0, 1.0, 1.0)),
+            false => {
+                let unit_direction = Vector3::unit_vector(&ray.direction());
+                let a = 0.5 * (&unit_direction.y + 1.0);
+                &((1.0 - a) * &Color::new(1.0, 1.0, 1.0)) + &(a * &Color::new(0.5, 0.7, 1.0))
+            }
         }
-
-        let unit_direction = Vector3::unit_vector(ray.direction());
-        let a = 0.5 * &(&unit_direction.y + 1.0);
-        &((1.0 - a) * &Color::new(1.0, 1.0, 1.0)) + &(a * &Color::new(0.5, 0.7, 1.0))
     }
 }
