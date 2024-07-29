@@ -13,6 +13,10 @@ impl Ray {
         }
     }
 
+    pub fn zero() -> Self {
+        Ray::new(&Point3::zero(), &Vector3::zero())
+    }
+
     pub fn origin(&self) -> Point3 {
         self.origin
     }

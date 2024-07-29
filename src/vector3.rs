@@ -29,6 +29,12 @@ impl Vector3 {
         self.x * self.x + self.y * self.y + self.z * self.z
     }
 
+    pub fn near_zero(&self) -> bool {
+        // Return true if the vector is close to zero in all dimensions
+        let s = 1e-8_f64;
+        (f64::abs(self.x) < s) && (f64::abs(self.y) < s) && (f64::abs(self.z) < s)
+    }
+
     pub fn dot(lhs: &Vector3, rhs: &Vector3) -> f64 {
         lhs.x * rhs.x + lhs.y * rhs.y + lhs.z * rhs.z
     }
@@ -80,6 +86,10 @@ impl Vector3 {
             return on_unit_sphere;
         }
         -on_unit_sphere
+    }
+
+    pub fn reflect(v: &Vector3, n: &Vector3) -> Self {
+        v - &(2.0 * Vector3::dot(v, n) * n)
     }
 }
 

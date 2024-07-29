@@ -3,13 +3,10 @@ use std::{
     io::{BufWriter, Write},
 };
 
+use std::rc::Rc;
+
 use crate::{
-    color::Color,
-    hittable::{HitRecord, Hittable},
-    interval::Interval,
-    ray::Ray,
-    utils,
-    vector3::{Point3, Vector3},
+    color::Color, hittable::{HitRecord, Hittable}, interval::Interval, material::Lambertian, ray::Ray, utils, vector3::{Point3, Vector3}
 };
 
 pub struct Camera {
@@ -126,21 +123,32 @@ impl Camera {
     }
 
     fn ray_color<T: Hittable>(ray: &Ray, depth: i32, world: &T) -> Color {
+        
         // If we've exceeded the ray bounce, no more lights is gathered
-        if depth <= 0 { return Color::new(0.0, 0.0, 0.0)}
+        if depth <= 0 {
+            return Color::new(0.0, 0.0, 0.0);
+        }
 
         let mut rec = HitRecord::zero();
 
-        match world.hit(ray, Interval::new(0.001, f64::INFINITY), &mut rec) {
-            true => {
-                let direction = &rec.normal + &Vector3::random_unit_vector();
-                0.5 * &Camera::ray_color(&Ray::new(&rec.p, &direction), depth - 1, world)
-            } ,
-            false => {
-                let unit_direction = Vector3::unit_vector(&ray.direction());
-                let a = 0.5 * (&unit_direction.y + 1.0);
-                &((1.0 - a) * &Color::new(1.0, 1.0, 1.0)) + &(a * &Color::new(0.5, 0.7, 1.0))
+        if world.hit(ray, Interval::new(0.001, f64::INFINITY), &mut rec) {
+            let mut scattered = Ray::zero();
+            let mut attenuation = Color::zero();
+            let material = &rec.mat;
+
+            let material = match material {
+                Some(mat) => mat.clone(),
+                None => Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)))
+            };
+
+            if material.scatter(ray, &rec, &mut attenuation, &mut scattered) {
+                return &attenuation * &Camera::ray_color(&scattered, depth - 1, world);
             }
+            return Color::zero()
         }
+
+        let unit_direction = Vector3::unit_vector(&ray.direction());
+        let a = 0.5 * (&unit_direction.y + 1.0);
+        &((1.0 - a) * &Color::new(1.0, 1.0, 1.0)) + &(a * &Color::new(0.5, 0.7, 1.0))
     }
 }
