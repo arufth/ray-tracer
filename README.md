@@ -1,7 +1,7 @@
 # Rust Ray Tracer
 
 This project is an implementation of the **Ray Tracing in One Weekend** series by Peter Shirley, adapted to the Rust programming language. The original series guides readers through building a simple ray tracer from scratch over a weekend using C++. This Rust adaptation follows the same concepts and progression but utilizes Rust's features.
-<!-- ![Final Result]() -->
+<img src="./output.jpeg" alt="Final Result" width="100%"/>
 
 ## About
 
