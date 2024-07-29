@@ -126,7 +126,10 @@ impl Camera {
         let mut rec = HitRecord::zero();
 
         match world.hit(ray, Interval::new(0.0, f64::INFINITY), &mut rec) {
-            true => 0.5 * &(&rec.normal + &Color::new(1.0, 1.0, 1.0)),
+            true => {
+                let direction = Vector3::random_on_hemisphere(&rec.normal);
+                0.5 * &Camera::ray_color(&Ray::new(&rec.p, &direction), world)
+            } ,
             false => {
                 let unit_direction = Vector3::unit_vector(&ray.direction());
                 let a = 0.5 * (&unit_direction.y + 1.0);

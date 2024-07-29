@@ -1,6 +1,8 @@
 use std::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Neg, Sub};
 
-#[derive(Debug, Copy, Clone )]
+use crate::utils;
+
+#[derive(Debug, Copy, Clone)]
 
 pub struct Vector3 {
     pub x: f64,
@@ -41,6 +43,43 @@ impl Vector3 {
 
     pub fn unit_vector(vector: &Vector3) -> Self {
         vector / vector.length()
+    }
+
+    pub fn random() -> Self {
+        Self {
+            x: utils::canonical_random_number(),
+            y: utils::canonical_random_number(),
+            z: utils::canonical_random_number(),
+        }
+    }
+
+    pub fn random_in_range(min: f64, max: f64) -> Self {
+        Self {
+            x: utils::random_number_in_range(min, max),
+            y: utils::random_number_in_range(min, max),
+            z: utils::random_number_in_range(min, max),
+        }
+    }
+
+    pub fn random_in_unit_sphere() -> Vector3 {
+        loop {
+            let p = Vector3::random_in_range(-1.0, 1.0);
+            if p.length_squared() < 1.0 {
+                return p;
+            }
+        }
+    }
+
+    pub fn random_unit_vector() -> Vector3 {
+        Vector3::unit_vector(&Vector3::random_in_unit_sphere())
+    }
+
+    pub fn random_on_hemisphere(normal: &Vector3) -> Vector3 {
+        let on_unit_sphere = Vector3::random_unit_vector();
+        if Vector3::dot(&on_unit_sphere, &normal) > 0.0 {
+            return on_unit_sphere;
+        }
+        -on_unit_sphere
     }
 }
 
