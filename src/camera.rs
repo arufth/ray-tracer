@@ -16,6 +16,7 @@ pub struct Camera {
     pub aspect_ratio: f64,
     pub image_width: i32,
     pub samples_per_pixel: i32,
+    pub max_depth: i32,
 
     image_height: i32,
     pixel_sample_scale: f64,
@@ -31,6 +32,8 @@ impl Camera {
             aspect_ratio: 1.0,
             image_width: 100,
             samples_per_pixel: 10,
+            max_depth: 10,
+
             image_height: 0,
             pixel_sample_scale: 0.0,
             center: Point3::zero(),
@@ -91,7 +94,7 @@ impl Camera {
 
                 for _ in 0..self.samples_per_pixel {
                     let ray = self.get_ray(i, j);
-                    pixel_color += &Camera::ray_color(&ray, world);
+                    pixel_color += &Camera::ray_color(&ray, self.max_depth, world);
                 }
                 Color::write_color(&mut writer, &(self.pixel_sample_scale * &pixel_color))?;
             }
@@ -122,13 +125,16 @@ impl Camera {
         )
     }
 
-    fn ray_color<T: Hittable>(ray: &Ray, world: &T) -> Color {
+    fn ray_color<T: Hittable>(ray: &Ray, depth: i32, world: &T) -> Color {
+        // If we've exceeded the ray bounce, no more lights is gathered
+        if depth <= 0 { return Color::new(0.0, 0.0, 0.0)}
+
         let mut rec = HitRecord::zero();
 
         match world.hit(ray, Interval::new(0.0, f64::INFINITY), &mut rec) {
             true => {
                 let direction = Vector3::random_on_hemisphere(&rec.normal);
-                0.5 * &Camera::ray_color(&Ray::new(&rec.p, &direction), world)
+                0.5 * &Camera::ray_color(&Ray::new(&rec.p, &direction), depth - 1, world)
             } ,
             false => {
                 let unit_direction = Vector3::unit_vector(&ray.direction());
