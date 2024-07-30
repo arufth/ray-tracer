@@ -1,6 +1,7 @@
 use crate::{
+    color::Color,
     interval::Interval,
-    material::Material,
+    material::{Lambertian, Material},
     ray::Ray,
     vector3::{Point3, Vector3},
 };
@@ -10,7 +11,7 @@ use std::rc::Rc;
 pub struct HitRecord {
     pub p: Point3,
     pub normal: Vector3,
-    pub mat: Option<Rc<dyn Material>>,
+    pub mat: Rc<dyn Material>,
     pub t: f64,
     pub front_face: bool,
 }
@@ -20,7 +21,7 @@ impl HitRecord {
         Self {
             p: Point3::zero(),
             normal: Vector3::zero(),
-            mat: None,
+            mat: Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0))),
             t: 0.0,
             front_face: false,
         }

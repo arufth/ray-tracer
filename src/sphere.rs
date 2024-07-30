@@ -6,7 +6,7 @@ use std::rc::Rc;
 pub struct Sphere {
     center: Point3,
     radius: f64,
-    mat: Option<Rc<dyn Material>>,
+    mat: Rc<dyn Material>
 }
 
 impl Sphere {
@@ -14,7 +14,7 @@ impl Sphere {
         Self {
             center,
             radius: radius.max(0.0),
-            mat: Some(mat)
+            mat
         }
     }
 }

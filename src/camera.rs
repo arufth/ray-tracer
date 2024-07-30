@@ -6,7 +6,13 @@ use std::{
 use std::rc::Rc;
 
 use crate::{
-    color::Color, hittable::{HitRecord, Hittable}, interval::Interval, material::Lambertian, ray::Ray, utils, vector3::{Point3, Vector3}
+    color::Color,
+    hittable::{HitRecord, Hittable},
+    interval::Interval,
+    material::Lambertian,
+    ray::Ray,
+    utils,
+    vector3::{Point3, Vector3},
 };
 
 pub struct Camera {
@@ -123,7 +129,6 @@ impl Camera {
     }
 
     fn ray_color<T: Hittable>(ray: &Ray, depth: i32, world: &T) -> Color {
-        
         // If we've exceeded the ray bounce, no more lights is gathered
         if depth <= 0 {
             return Color::new(0.0, 0.0, 0.0);
@@ -136,15 +141,10 @@ impl Camera {
             let mut attenuation = Color::zero();
             let material = &rec.mat;
 
-            let material = match material {
-                Some(mat) => mat.clone(),
-                None => Rc::new(Lambertian::new(Color::new(0.8, 0.8, 0.0)))
-            };
-
             if material.scatter(ray, &rec, &mut attenuation, &mut scattered) {
                 return &attenuation * &Camera::ray_color(&scattered, depth - 1, world);
             }
-            return Color::zero()
+            return Color::zero();
         }
 
         let unit_direction = Vector3::unit_vector(&ray.direction());
