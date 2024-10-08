@@ -1,4 +1,11 @@
-# Rust Ray Tracer
+```
+██████╗''█████╗'██╗'''██╗''''████████╗██████╗''█████╗''██████╗███████╗██████╗'
+██╔══██╗██╔══██╗╚██╗'██╔╝''''╚══██╔══╝██╔══██╗██╔══██╗██╔════╝██╔════╝██╔══██╗
+██████╔╝███████║'╚████╔╝''''''''██║'''██████╔╝███████║██║'''''█████╗''██████╔╝
+██╔══██╗██╔══██║''╚██╔╝'''''''''██║'''██╔══██╗██╔══██║██║'''''██╔══╝''██╔══██╗
+██║''██║██║''██║'''██║''''''''''██║'''██║''██║██║''██║╚██████╗███████╗██║''██║
+╚═╝''╚═╝╚═╝''╚═╝'''╚═╝''''''''''╚═╝'''╚═╝''╚═╝╚═╝''╚═╝'╚═════╝╚══════╝╚═╝''╚═╝
+```
 
 This project is an implementation of the **Ray Tracing in One Weekend** series by Peter Shirley, adapted to the Rust programming language. The original series guides readers through building a simple ray tracer from scratch over a weekend using C++. This Rust adaptation follows the same concepts and progression but utilizes Rust's features.
 <img src="https://raytracing.github.io/images/img-1.23-book1-final.jpg" alt="Final Result" width="100%"/>
