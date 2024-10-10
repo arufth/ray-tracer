@@ -82,14 +82,20 @@ impl Vector3 {
 
     pub fn random_in_unit_disk() -> Vector3 {
         loop {
-            let p = Vector3::new(utils::random_number_in_range(-1.0, 1.0), utils::random_number_in_range(-1.0, 1.0), 0.0);
-            if p.length_squared() < 1.0 { return p;} 
+            let p = Vector3::new(
+                utils::random_number_in_range(-1.0, 1.0),
+                utils::random_number_in_range(-1.0, 1.0),
+                0.0,
+            );
+            if p.length_squared() < 1.0 {
+                return p;
+            }
         }
     }
 
     pub fn random_on_hemisphere(normal: &Vector3) -> Vector3 {
         let on_unit_sphere = Vector3::random_unit_vector();
-        if Vector3::dot(&on_unit_sphere, &normal) > 0.0 { 
+        if Vector3::dot(&on_unit_sphere, &normal) > 0.0 {
             return on_unit_sphere;
         }
         -on_unit_sphere

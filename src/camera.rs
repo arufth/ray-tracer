@@ -65,7 +65,7 @@ impl Camera {
             v: Vector3::zero(),
             w: Vector3::zero(),
             defocus_disk_u: Vector3::zero(),
-            defocus_disk_v: Vector3::zero()
+            defocus_disk_v: Vector3::zero(),
         }
     }
 
@@ -83,7 +83,7 @@ impl Camera {
         let h = f64::tan(theta / 2.0);
         let viewport_height = 2.0 * h * self.focus_dist;
         let viewport_width = viewport_height * (self.image_width as f64 / self.image_height as f64);
-        
+
         // Calculate the u, v, w unit basis vectors for the camera coordinate frame
         self.w = Vector3::unit_vector(&(&self.lookfrom - &self.lookat));
         self.u = Vector3::unit_vector(&&Vector3::cross(&self.vup, &self.w));
@@ -98,10 +98,13 @@ impl Camera {
         self.pixel_delta_v = &viewport_v / self.image_height as f64;
 
         // Calculate the location of the upper left pixel.
-        let viewport_upper_left = &(&(&self.center - &(self.focus_dist as f64 * &self.w)) - &(&viewport_u / 2.0)) - &(&viewport_v / 2.0);
+        let viewport_upper_left = &(&(&self.center - &(self.focus_dist as f64 * &self.w))
+            - &(&viewport_u / 2.0))
+            - &(&viewport_v / 2.0);
 
         // Calculate the camera defocus disk basis vectors
-        let defocus_radius = self.focus_dist * f64::tan(utils::degrees_to_radians(self.defocus_angle / 2.0));
+        let defocus_radius =
+            self.focus_dist * f64::tan(utils::degrees_to_radians(self.defocus_angle / 2.0));
         self.defocus_disk_u = &self.u * defocus_radius;
         self.defocus_disk_v = &self.v * defocus_radius;
 
@@ -147,7 +150,11 @@ impl Camera {
         let pixel_sample = &(&self.pixel00_loc + &((i as f64 + offset.x) * &self.pixel_delta_u))
             + &((j as f64 + offset.y) * &self.pixel_delta_v);
 
-        let ray_origin = if self.defocus_angle <= 0.0 { self.center } else {self.defocus_disk_sample()} ;
+        let ray_origin = if self.defocus_angle <= 0.0 {
+            self.center
+        } else {
+            self.defocus_disk_sample()
+        };
         let ray_direction = &pixel_sample - &ray_origin;
 
         Ray::new(&ray_origin, &ray_direction)

@@ -1,11 +1,13 @@
 use crate::{interval::Interval, vector3::Vector3};
 use std::io::{self, Write};
 
-pub type Color = Vector3; 
+pub type Color = Vector3;
 
 impl Color {
-    pub fn linear_to_gamma(linear_component: f64) -> f64{
-        if linear_component > 0.0 { return linear_component.sqrt()}
+    pub fn linear_to_gamma(linear_component: f64) -> f64 {
+        if linear_component > 0.0 {
+            return linear_component.sqrt();
+        }
         0.0
     }
     pub fn write_color<W: Write>(out: &mut W, pixel_color: &Color) -> Result<(), io::Error> {

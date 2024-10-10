@@ -1,12 +1,16 @@
 use crate::{
-    hittable::{HitRecord, Hittable}, interval::Interval, material::Material, ray::Ray, vector3::{Point3, Vector3}
+    hittable::{HitRecord, Hittable},
+    interval::Interval,
+    material::Material,
+    ray::Ray,
+    vector3::{Point3, Vector3},
 };
 use std::rc::Rc;
 
 pub struct Sphere {
     center: Point3,
     radius: f64,
-    mat: Rc<dyn Material>
+    mat: Rc<dyn Material>,
 }
 
 impl Sphere {
@@ -14,7 +18,7 @@ impl Sphere {
         Self {
             center,
             radius: radius.max(0.0),
-            mat
+            mat,
         }
     }
 }
